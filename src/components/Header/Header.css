@@ -1,0 +1,9 @@
+.app__header {
+  background-color: white;
+  object-fit: contain;
+  border-bottom: 1px solid lightgray;
+}
+.app__headerImage {
+  width: 30vw;
+  padding: 20px;
+}
