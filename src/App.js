@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Post from "./components/Post/Post";
-import Image from "./ascets/react.jfif";
+
+import { db } from "./firebase";
 
 const App = () => {
-  const data = {
-    username: "1",
-    caption: "Hello 1",
-    imageUrl: `${Image}`,
-  };
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    db.collection("posts").onSnapshot((snapshot) => {
+      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
+    });
+  }, []);
 
   return (
     <div className="app">
       <Header />
-      <Post data={data} />
+      {posts.map(({ id, post }) => (
+        <Post key={id} data={post} />
+      ))}
     </div>
   );
 };
