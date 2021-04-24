@@ -34,6 +34,7 @@ const App = () => {
 
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
   const [modalStyle] = useState(getModalStyle);
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
@@ -44,7 +45,6 @@ const App = () => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         // User Logged In
-        console.log(authUser);
         setuser(authUser);
       } else {
         // User Logged Out
@@ -73,6 +73,16 @@ const App = () => {
         });
       })
       .catch((error) => alert(error.message));
+    setOpen(false);
+  };
+
+  const signIn = (e) => {
+    e.preventDefault();
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((err) => alert(err.message));
+
+    setOpenSignIn(false);
   };
 
   return (
@@ -107,11 +117,38 @@ const App = () => {
           </form>
         </div>
       </Modal>
+      <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
+        <div style={modalStyle} className={classes.paper}>
+          <form className="app__signup">
+            <center>
+              <img src={Logo} alt="Instagram Logo" />
+            </center>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setemail(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
+            />
+            <Button type="submit" onClick={signIn}>
+              Sign In
+            </Button>
+          </form>
+        </div>
+      </Modal>
       <Header />
       {user ? (
         <Button onClick={() => auth.signOut()}>Log Out</Button>
       ) : (
-        <Button onClick={() => setOpen(true)}>Sign Up</Button>
+        <div className="loginContainer">
+          <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+          <Button onClick={() => setOpen(true)}>Sign Up</Button>
+        </div>
       )}
       {posts.map(({ id, post }) => (
         <Post key={id} data={post} />
