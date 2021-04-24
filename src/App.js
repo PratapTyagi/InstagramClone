@@ -5,7 +5,7 @@ import Header from "./components/Header/Header";
 import Post from "./components/Post/Post";
 import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 
 const getModalStyle = () => {
   const top = 50;
@@ -38,6 +38,24 @@ const App = () => {
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [user, setuser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // User Logged In
+        console.log(authUser);
+        setuser(authUser);
+      } else {
+        // User Logged Out
+        setuser(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user, username]);
 
   useEffect(() => {
     db.collection("posts").onSnapshot((snapshot) => {
@@ -47,7 +65,14 @@ const App = () => {
 
   const signUp = (e) => {
     e.preventDefault();
-    console.log(e);
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((authUser) => {
+        return authUser.user.updateProfile({
+          displayName: username,
+        });
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (
@@ -83,7 +108,11 @@ const App = () => {
         </div>
       </Modal>
       <Header />
-      <Button onClick={() => setOpen(true)}>Sign Up</Button>
+      {user ? (
+        <Button onClick={() => auth.signOut()}>Log Out</Button>
+      ) : (
+        <Button onClick={() => setOpen(true)}>Sign Up</Button>
+      )}
       {posts.map(({ id, post }) => (
         <Post key={id} data={post} />
       ))}
