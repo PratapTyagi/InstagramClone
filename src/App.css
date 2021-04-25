@@ -17,3 +17,9 @@
 .app__signup img {
   width: 20vw;
 }
+
+.all_components {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

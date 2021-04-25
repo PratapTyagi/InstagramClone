@@ -1,0 +1,4 @@
+.image__upload {
+  display: flex;
+  flex-direction: column;
+}
