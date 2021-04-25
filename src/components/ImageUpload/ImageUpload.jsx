@@ -54,10 +54,14 @@ const ImageUpload = ({ username }) => {
     <div className="image__upload">
       {/* Heading */}
       <h1>Upload Image</h1>
-      {/* Progress bar */}
-      <progress value={progress} max="100" />
       {/* File picker */}
       <input type="file" placeholder="Choose File" onChange={handleChange} />
+      {/* Progress bar */}
+      <progress
+        className="image__upload__progress"
+        value={progress}
+        max="100"
+      />
       {/* Captions */}
       <input
         type="text"
