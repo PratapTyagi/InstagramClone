@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Logo from "./ascets/logo.png";
-import Header from "./components/Header/Header";
 import Post from "./components/Post/Post";
 import { Modal, Button, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { db, auth } from "./firebase";
 import ImageUpload from "./components/ImageUpload/ImageUpload";
+import logo from "./ascets/logo.png";
 
 const getModalStyle = () => {
   const top = 50;
@@ -59,9 +59,13 @@ const App = () => {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() }))
+        );
+      });
   }, []);
 
   const signUp = (e) => {
@@ -85,13 +89,20 @@ const App = () => {
 
     setOpenSignIn(false);
   };
-
   return (
     <div className="app">
-      <Header />
-
+      <div className="app__header">
+        <img src={logo} alt="Instagram" className="app__headerImage" />
+        {user ? (
+          <Button onClick={() => auth.signOut()}>Log Out</Button>
+        ) : (
+          <div className="loginContainer">
+            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+            <Button onClick={() => setOpen(true)}>Sign Up</Button>
+          </div>
+        )}
+      </div>
       <div className="all_components">
-        <ImageUpload username={user.displayName} />
         <Modal open={open} onClose={() => setOpen(false)}>
           <div style={modalStyle} className={classes.paper}>
             <form className="app__signup">
@@ -146,17 +157,15 @@ const App = () => {
             </form>
           </div>
         </Modal>
+
         {user ? (
-          <Button onClick={() => auth.signOut()}>Log Out</Button>
+          posts.map(({ id, post }) => <Post key={id} data={post} />)
         ) : (
-          <div className="loginContainer">
-            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-            <Button onClick={() => setOpen(true)}>Sign Up</Button>
-          </div>
+          <h2>
+            Sorry!!! <br /> You have to SignUp/SignIn
+          </h2>
         )}
-        {posts.map(({ id, post }) => (
-          <Post key={id} data={post} />
-        ))}
+        {user ? <ImageUpload username={user.displayName} /> : null}
       </div>
     </div>
   );
