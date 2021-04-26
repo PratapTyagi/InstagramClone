@@ -160,7 +160,16 @@ const App = () => {
 
         <div className="app__posts">
           {user ? (
-            posts.map(({ id, post }) => <Post key={id} data={post} />)
+            posts.map(({ id, post }) => (
+              <Post
+                key={id}
+                postId={id}
+                imageUrl={post.imageUrl}
+                caption={post.caption}
+                username={post.username}
+                user={user}
+              />
+            ))
           ) : (
             <h2>
               Sorry!!! <br /> You have to SignUp/SignIn
