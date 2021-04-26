@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  text-align: center;
 }
 
 .app {
@@ -11,6 +10,9 @@
 }
 
 .app__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   background-color: white;
   display: flex;
   justify-content: space-between;
