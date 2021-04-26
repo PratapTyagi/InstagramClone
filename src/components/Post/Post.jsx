@@ -19,7 +19,7 @@ const Post = ({ data }) => {
       <img className="post__image" src={data.imageUrl} alt="Image" />
       {/* Username + Caption */}
       <h4 className="post__text">
-        <strong>Username:</strong> {data.caption}
+        <strong>{data.username}:</strong> {data.caption}
       </h4>
     </div>
   );

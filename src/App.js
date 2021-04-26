@@ -158,13 +158,15 @@ const App = () => {
           </div>
         </Modal>
 
-        {user ? (
-          posts.map(({ id, post }) => <Post key={id} data={post} />)
-        ) : (
-          <h2>
-            Sorry!!! <br /> You have to SignUp/SignIn
-          </h2>
-        )}
+        <div className="app__posts">
+          {user ? (
+            posts.map(({ id, post }) => <Post key={id} data={post} />)
+          ) : (
+            <h2>
+              Sorry!!! <br /> You have to SignUp/SignIn
+            </h2>
+          )}
+        </div>
         {user ? <ImageUpload username={user.displayName} /> : null}
       </div>
     </div>
